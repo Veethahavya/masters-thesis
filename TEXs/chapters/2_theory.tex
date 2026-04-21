@@ -1,0 +1,217 @@
+\chapter{Theoretical Concepts} \label{theory}
+This Chapter aims to enumerate and briefly introduce the theoretical concepts and formulations that are utilized directly or indirectly by the three numerical models elucidated in the following Chapter, \ref{models}. \nameref{models}
+
+
+\section{Numerical Description of Groundwater Flows}
+
+\subsection{Darcy's Law}
+The modelling of Groundwater flows, numerically, often fundamentally utilize the Darcy's Law formulated experimentally by Henry Darcy in 1856. However, the formulation has subsequently been derived from the Navier-Stokes formulation \cite{Whitaker1986}. The law is stated as follows \cite{freeze}:
+\begin{equation}\label{eq:darcy}
+    q= -K*\frac{(h_2 -h_1)}{L},\
+\end{equation}\
+where
+\begin{tabbing}
+    $q$ \hspace{.4in}\= = darcy flux  [LT$^{-1}$],\\ 
+    $K$ \>= hydraulic conductivity [LT$^{-1}$],\\
+    $h_2,h_1$ \>=\= respective hydraulic heads [L], and\\
+    $L$ \>= length of the flow path [L].\\ 
+\end{tabbing}
+
+The one-dimensional formulation as described in Equation \ref{eq:darcy}, in spite of its theoretical and practical limitations ``provides an accurate description of the flow of groundwater in almost all hydrogeological environments`` \cite{freeze} In general, Darcy's Law is applicable to:
+\begin{itemize}
+    \item saturated and for unsaturated flows,
+    \item steady-state and transient flows,
+    \item flows in aquifers and aquitards,
+    \item flows in homogeneous and anisotropic porous media, and
+    \item flows all porous media whose grain-size distribution do not induce any turbulent effects.
+\end{itemize}
+
+\subsection{Groundwater Flow Equation}
+The combination of the Darcy's Law with the principle of conservation of mass along three dimensions of space yields the Groundwater Flow equation. This formulation is described in the Cartesian coordinate system as follows \cite{freeze}:
+\begin{equation} \label{eq:gwf}
+    K_x\frac{\partial ^2h}{\partial x^2} +K_y\frac{\partial ^2h}{\partial y^2}+K_z\frac{\partial ^2h}{\partial z^2} =S_s\frac{\partial h}{\partial t} +Q_ext.
+\end{equation}
+where
+\begin{tabbing}
+    $K_x, K_y, K_z$ \hspace{.4in}\= = hydraulic conductivities in the $x, y, z$ directions respectively [LT$^{-1}$], \\ 
+    $h$ \>= corresponding hydraulic heads [L], \\
+    $t$ \>= the corresponding time [T], \\
+    $S_s$ \>= Storativity of the aquifer [L$^{-1}$], and\\
+    $Q_ext$ \>= external source/sink term  [L$^3$T$^{-1}$].\\
+\end{tabbing}
+The Equation \ref{eq:gwf} roughly states that in a 3D Cartesian elemental control volume, changes in heads along all the three dimensions correspond to the change in storage. This is a rather straight-forward and powerful description that has the ability to numerically describe transient groundwater flows for an extensive set use-case scenarios.
+\\ \\
+To describe a steady-state system, one may simply exclude the storage term in Equation \ref{eq:gwf}.
+\paragraph*{Supplementary note:}
+The applicative limitations for this formulation on which the quality of description depend on are as follows:
+\begin{itemize}
+    \item determining the extremely spatially variable hydraulic conductivities in the field for each elemental control volume is a task that is rather challenging if not impossible;
+    \item arriving on an agreeable spatial and temporal democratisation needs to be backed by reasonable estimates of the groundwater flows involved 
+\end{itemize}
+In this light, uncertainty quantification is often a great peripheral tool that can increase the robustness of the application of Groundwater Flow Equation to numerically describe groundwater flows.
+\\ \\
+
+
+\section{Numerical Description of Surface-water Flows}
+
+\subsection{Navier-Stokes equations}
+The Navier-Stokes equations describe the conservation of momentum and mass in Newtonian fluids. They were formulated by Claude-Louis Navier and George Gabriel Stokes in 1892. These equations are the fundamental basis for numerically describing flows of Newtonian fluids in an exhaustively varied set of scenarios.
+\\ \\
+The Navier-Stokes formulation in its modern notation for a Newtonian fluid with a kinematic viscosity of $\nu$ and mass density $\rho$ is described by the following equations:
+\begin{equation} \label{eq:navier_stokes_momentum}
+    {\frac {\partial v}{\partial t}} + {v \cdot \nabla v} = {\nu \nabla^2 v} - {\frac {\nabla p}{ \rho }} - g
+\end{equation}
+\\
+\begin{equation} \label{eq:navier_stokes_mass}
+    {\nabla v} = 0
+\end{equation}
+where
+\begin{tabbing}
+    $v$\hspace{.4in}\= = velocity vector [LT$^{-1}$],\\
+    $p$ \>= pressure [ML$^{-1}$T$^{-1}$], and \\
+    $g$ \>= gravitational acceleration [LT$^{-2}$].
+\end{tabbing}
+Equation \ref{eq:navier_stokes_momentum} describes the conservation of momentum, while Equation \ref{eq:navier_stokes_mass} describes the conservation of mass.
+\\ \\
+There numerous variations of the Navier-Stokes formulations for with simplifications or additions depending on the specific use-case scenario. 
+
+\subsection{Shallow water equations}
+The shallow water equations are one such variation of the Navier-Stokes equation that are often used to describe pressurized fluid flow (free-surface flow being a simplification of the same) in cases where the horizontal scales are considerably larger than the vertical scale. This formulation is obtained by depth-averaging the Navier-Stokes equation and is also referred to as the depth-averaged Navier-Stokes equations.
+\\ \\
+In its 1D form, it is popularly known as the Saint-Venant formulation. The 2D formulation of the shallow water equation is of interest for this study for reasons discussed later on. The shallow water equations along two spatial dimensions are described as follows \cite{Deltares}:
+\begin{equation} \label{eq:shallow_water_mass}
+    {\frac{\partial h}{\partial t}} + {\nabla \cdot (hu)} = 0
+\end{equation}
+\begin{equation} \label{eq:shallow_water_momentum}
+    {\frac{\partial hu}{\partial t}} + {\nabla \cdot (hu^2)} = -{gh\nabla\zeta} + {\nabla \cdot (\nu h(\nabla u + \nabla u^T)) + \frac{\tau_b+\tau_w}{\rho}}
+\end{equation}
+where
+\begin{tabbing}
+    $\nabla$ \hspace{.4in}\= = $\left(\frac{\partial}{\partial x},\frac{\partial}{\partial y}\right)^T$,\\
+    $\zeta$ \>= water level [L], \\
+    $h$ \>= water depth [L], \\
+    $u$ \>= velocity vector [LT$^{-1}$], \\
+    $g$ \>= gravitational acceleration [LT$^{-2}$], \\
+    $\nu$ \>= viscosity [L$^2$T$^{-1}$], \\
+    $\rho$ \>= mass density of water [ML$^{-3}$], \\
+    $\tau_b$ \>= bed shear stress [ML$^{-1}$T$^{-2}$], and\\
+    $\tau_w$ \>= wind friction acting on the free surface [ML$^{-1}$T$^{-2}$]. \\
+\end{tabbing}
+
+
+\section{Numerical Description of Unsaturated Flows}
+The importance of accounting for and estimating unsaturated flows is well captured by this quote - "The vadose zone controls the ﬂux of water between the land surface and groundwater and partitions rainfall into runoff, inﬁltration, groundwater recharge and ET" (evapotranspiration) \cite{Downer2004}.
+\subsection{Richards equation}
+\label{richards}
+The Richards equation (RE) formulated by Lorenzo A. Richards in 1931 describes the 1D movement of water in unsaturated porous media. The formulation is based on the Darcy's Law. The transient form of the Richards equation describing vertical fluxes is described as follows:
+\begin{equation} \label{eq:richards_general}
+    { {\frac {\partial \theta }{\partial t}}={\frac {\partial }{\partial z}}\left[K(\theta )\left({\frac {\partial h}{\partial z}}+1\right)\right]\ }
+\end{equation}
+where
+\begin{tabbing}
+    $K$ \hspace{.4in}\= = hydraulic conductivity [LT$^{-1}$],\\
+    $h$ \>= matric head induced by capillary action [L], \\
+    $z$ \>= vertical elevation [L], \\
+    $\theta$ \>= volumetric water content [-], and \\
+    $t$ \>= time [T]. \\
+\end{tabbing}
+The RE has two formulations - the head-based and the saturation-based. Often, the head-based formulation is found to be put to use as the matric head can be more conveniently measured on the field as compared to the volumetric water saturation \cite{Downer2004}.
+\\
+The 1D head-based formulation of the RE along the vertical axis is described as follows \cite{Downer2004}:
+\begin{equation} \label{eq:richards_head_based}
+    C(\psi)\frac{\partial \psi}{\partial t} - \frac{\partial}{\partial t}\left[{K(\psi)\left({\frac{\partial \psi}{\partial z}}\right)-1}\right] - W = 0
+\end{equation}
+where
+\begin{tabbing}
+    $C$ \hspace{.4in}\= = speciﬁc moisture capacity [-],\\
+    $\psi$ \>= soil capillary head or the matric head [L], \\
+    $K(\psi)$ \>= effective hydraulic conductivity [LT$^{-1}$],\\
+    $W$ \>= source/sink term [LT$^{-1}$], and \\
+    $t$ \>= time [T]. \\
+\end{tabbing}
+
+\subsection{Water Retention Curves}
+\label{wrc}
+Water retention curves are formulations that describe the relationship between volumetric water content ($\theta$) and the matric head ($\psi$). The relationship is strongly dependent on the nature of the porous media. Typical curves are available for frequently found soils in nature.
+\\ \\
+Considering Equation \ref{eq:richards_head_based}, the estimation or description of unsaturated flows using the RE require $C$ and $K(\psi)$ as inputs. Note that these terms are dependant on the volumetric water content of the porous media in question and thus are spatially and temporally variable. It is highly challenging, if not impossible to supply these inputs from field data, especially for large areas. Therefore, to help this cause, RE often relies on the Water retention curves for the corresponding soil type found matching the site in question.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{\Pics/res_external/water_retention_curves}
+    \caption{Typical water retention curves for a sand(Ss), either silt or clay-loam(Uu), either loam-silt or clay(Lu), and either clay or peat(Tt) \cite{VanGenuchten1980}}
+    \label{fig:water_retention_curves}
+\end{figure}
+
+Figure \ref{fig:water_retention_curves} illustrates typical water retention curves for four typical soils. The x-axis represents the volumetric water content and the y-axis represents the capillary pressure or the negative matric head in hPa.
+\\
+"Matric potential (unit: pascal) is the free energy change in a unit volume of water when isothermally transferred from the soil water state to the free water state, and is defined at the soil-water-air representative elementary volume (REV)." \cite{Zhang2019}
+\\
+There are several models used to describe the water retention curves, of which the Brooks-Corey \cite{Brooks1966} and the Van Genuchten \cite{VanGenuchten1980} are popularly used.
+
+\subsection{The Van Genuchten Model}
+\label{vanGenuchten}
+The Van Genuchten is a popular model to produce water retention curves as it has proven to reasonably agree with field measurements and does not make a conditional description of the curve unlike the Brooks-Corey model. The model is described as follows:
+\begin{equation} \label{eq:vanGenuchten}
+    \theta(\psi) = \theta_r + \frac{\theta_s - \theta_r}{\left[ 1+(\alpha |\psi|)^n \right]^{1-1/n}}
+\end{equation}
+where
+\begin{tabbing}
+    $\theta(\psi)$ \hspace{.4in}\= = description of the water retention curve [-],\\
+    $\psi$ \>= capillary pressure (or matric head) [L], \\
+    $\theta_s$ \>= saturated water content [-],\\
+    $\theta_r$ \>= residual water content [-], \\
+    $\alpha$ \>= model parameter to account for the inverse of the air entry suction [-], and\\
+    $n$ \>= porosity [-]. \\
+\end{tabbing}
+From Equation \ref{eq:vanGenuchten} and the water retention curves in Figure \ref{fig:water_retention_curves}, one can observe that the curves in various soils are characterized by differing residual and saturated water contents inherent to the nature of the soils, among which porosity and grain-size distributions are primary driving factors.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.75]{\Pics/res_external/vG_BC}
+    \caption{A plot comparing the Van Genuchten and Brooks-Corey models for sandy soils \cite{Seki}}
+    \label{fig:vG_BC}
+\end{figure}
+
+\paragraph*{Supplementary notes:}
+\begin{itemize}
+    \item The RE is a non-linear partial differential equation (PDE) with no closed form analytical solution and is observed to be computationally expensive and unpredictable \cite{Short1995, Miller1998}. It is also noted to be "one of the most challenging problems in earth science" \cite{Farthing2017}.
+    \item The RE is criticized to over-emphasize the role of capillarity \cite{Germann2010} while being "overly simplistic" \cite{Gray1991}.
+    \item The RE is noted to demand very fine spatial discretization of less than 1 cm near the land surface to simulate infiltration of rainfall into dry soils \cite{Downer2004}.
+    \item The RE, along with the Brooks and Corey equations, is noted to provide a richer and more accurate description of reality when used to describe rainfall infiltration and soil moisture calculations by providing estimates for the soil-moisture content and improving the simulation of surface flows in combination with a watershed model \cite{Downer2003}.
+    \item In Equation \ref{eq:richards_head_based}, the hydraulic conductivity - $K$ and the specific moisture capacity - $C(\psi)$ are non-linearly dependant on the volumetric water content of the discrete element to which the model is to be applied, thus making the already complex PDE more challenging to solve \cite{Downer2004}. In the study by Downer Et al. \cite{Downer2004}, the RE is reported to have been linearized by fixing $K$ and $C(\psi)$ for each time-step.
+\end{itemize}
+
+
+\section{Coupling Schemes}
+\label{coupling_schemes}
+The classical approaches to achieve the coupling of pre-existing numerical models are briefly described below.
+
+\subsection{Implicit Coupling}
+In the implicit form of coupling, the numerical scheme that is set achieve the coupling of the models is integrated into the internal numerical scheme of the models itself, in a monolithic manner \cite{Morita2002}. The individual models that are to be coupled are aware of the coupling process. This is often achieved by manipulating the source code of the individual models in such a way that they are directly able to communicate between each other during the simulation period. This form of coupling is also refered to as \textit{tight-coupling}.
+\\
+Thus, by extension, this form of coupling is often \cite{Fernndez2011} \cite{Dunlap2013}:
+\begin{itemize}
+    \tick robust,
+    \tick accurate,
+    \cross complicated to implement (although, for models that are yet to be constructed, implicit coupling is not complicated to implement), and
+    \cross computationally expensive.
+\end{itemize}
+
+\subsection{Explicit Coupling}
+Models are explicitly/sequentially/weakly/loosely coupled when the coupling scheme is external to the numerical schemes of the individual models themselves \cite{Morita2002}. Exchange between the models in this type of coupling is achieved by making use of either boundary conditions or source/sink terms provided by the individual models. In an explicitly coupled scheme, the individual models are not aware of the coupling process.
+\\
+To implement this form of coupling, it is necessary to divide the simulation period (global) into smaller simulation periods (local) at the end of which the models exchange information and synchronize based on the devised numerical scheme that is external to the individual models.
+\\
+As a result, this for of coupling is often \cite{Fernndez2011} \cite{Dunlap2013}:
+\begin{itemize}
+    \tick easy to implement,
+    \tick computationally cheap,
+    \cross relatively inaccurate, and
+    \cross and not robust.
+\end{itemize}
+
+A subset of this form of coupling is \textbf{Iterative Coupling}, where the models are iteratively run between two local simulation periods until a desired convergence criteria is achieved, thus leveraging some computational expense for accuracy and robustness in an effort to mitigate the shortcomings of purely explicit coupling \cite{Barthel2016} \cite{Morita2002}.
+
+
+\endinput

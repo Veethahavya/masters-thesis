@@ -1,0 +1,27 @@
+\chapter{Summary and Discussion}
+\label{summary}
+This study and, subsequently, its findings, have explored and successfully applied a novel, conceptual, 0-dimensional, numerical scheme to agreeably, qualitatively, describe the processes in the unsaturated zone  that can be used to couple existing groundwater (GW) and surface-water (SW) models to represent reality adequately for large-scale, distributed, GW-SW interactions. One must note, however, that the description of the processes in the unsaturated zone are extremely simplistic and conceptual descriptions of the complex process that occur in reality, constructed in an effort to leverage depth in description of these processes to maintain computational inexpensiveness; all while maintaining adequate depth in the description to produce usable results. The target applications for the model are scenarios that require a rudimentary depth-averaged estimation of the soil moisture in the unsaturated zone for relatively large model domains (above ~\SI{1000}{\metre\squared}). The proof-of-concept for the conceptualized model is established as it has demonstrated a good mass balance, as discussed in Section \ref{mass_balance}, alongside demonstrating the capability to simulate a scenario qualitatively close to the measured observations,  as discussed in Section \ref{obs}. To summarize:
+\begin{itemize}
+    \item the model demonstrated an acceptable mass balance when the quantum of in-/out- fluxes were compared against the changes in storage over each simulation period as described in Section \ref{mass_balance};
+    \item the model produced, without any calibration and assumed initial conditions, simulated observations that were qualitatively comparable to the measured observations, as described in section \ref{obs}.
+\end{itemize}
+
+%\todo[inline]{H: I would say, this can be expanded a little to mention clearly (i) what has been done and (ii) what is the results. \\
+%V: added the above itemized list to address this}
+
+However, one must not overlook the following before applying the GWSWEX model and the coupling scheme:
+\begin{itemize}
+    \item The model is conceptual, i.e. it is only representative but not accurately descriptive of the underlying physics that it sets out to simulate and thus might not have the ability to capture a variety of nuances in these processes. One must be aware that this is by design, as such a conceptual simplification of the processes enable one to leverage the nuances in return for drastically cheaper computational costs. 
+    \item The model produces depth averaged results while describing the unsaturated zone processes and estimating the soil moisture storage, i.e. it provides no qualitative or quantitative variations of the estimate along the vertical axis.
+    \item Owing to the conceptual nature of the model, it demands extensive calibration to the application area.
+\end{itemize}
+
+During the study, it was realised that the following improvements may be made to the GWSWEX model:
+\begin{itemize}
+    \item Implementation of a numerical scheme to estimate and withdraw the actual evapotranspiration outflux based on the prescribed potential evapotranspiration, somewhat similar to how the incoming precipitation influx is allocated to the three storage terms.
+    \item Enabling spatially variable precipitation and evapotranspiration inputs.
+    \item Investigating the implementation of inter-cellular SM storage terms, possibly via a numerical scheme based on natural neighbor interpolation, to simulate unsaturated subsurface flows.
+\end{itemize}
+
+
+\endinput

@@ -1,0 +1,59 @@
+\chapter{Introduction} \label{intro}
+
+Groundwater (GW) and Surface-water (SW) systems interact seamlessly in reality. They are the two major storage compartments in the hydrological cycle that are directly relevant to our civilizations.
+Harnessing these two storage systems have enabled civilizations to grow into what they today are. Surface-water has been widely celebrated throughout a larger portion of history than groundwater - from rain-fed farming systems to gigantic irrigation schemes, mega-cities sprawling along the banks of major rivers bringing along with them industries that are provided with a reliable transport network, gigantic dams that could store enough water to reduce the earth's rotation by 0.06 microseconds \cite{nasa/jpl_2005}. Although groundwater has been historically not been harnessed as extensively as surface-water, recent studies in hydrogeology and increased demand for water have resulted a surge in groundwater use, abuse and depletion. From open wells that met the needs of individuals (especially in areas where rainfall distribution is skewed), to deep borewells that could irrigate hectares, harnessing groundwater has marked a paradigm shift in the way we perceive freshwater resources. However, we are also set to face the unintended consequences of rapid groundwater depletion in the coming years. From 1960 to 2000, global annual groundwater depletion increased from 126 (±32) km$^3$ to 283 (±40) km$^3$ \cite{Wada2010}.
+\\ \\
+In the numerical modelling of our hydrosystems, GW and SW are often represented by separate numerical models. The reasons for this are multi-fold.
+\\ \\
+On the technical side of things, the driving physics popularly used to describe most GW and SW flows differ considerably. Most GW flows occur in porous media (exceptions may be Karstic or fractured aquifers) while SW flows are characterized as open-channel flows. Thus, they inherently have differing forces of physics at play that are of varying relevance to describe the nature of their respective flows. Often GW models use Darcy's Law to describe saturated GW flows and the Richards Equation to describe unsaturated GW flows; while the SW models often use Navier–Stokes formulations to describe SW flows.
+\\
+Furthermore, their respective timescales do not often coincide. Most GW flows in porous media are characteristically slower (exceptions may be Karstic or fractured aquifers) than SW flows. They therefore translate numerically to differing time-discretizations.
+\\
+Additionally, to account for the exchange between GW and SW storages, it may also be necessary to model the water fluxes in the unsaturated zone often found separating the two, and this has proven to be a challenging task \cite{Short1995}.
+\\ \\
+On the applicative side, more often than not, the two systems are driven by fluxes that are larger than the exchange between the two. These fluxes mostly include meteorological factors such as precipitation and evapotranspiration, and in-/out-fluxes from various boundary conditions. Thus, there is not always much to gain by choosing to model GW and SW using an integrated model for all applications.
+\\ \\
+However, one must note that the importance of using an integrated numerical model to simulate GW and SW processes becomes crucial in scenarios where the GW-SW interaction fluxes account to a good portion of the total fluxes. Often, these scenarios call for the modelling of spatially localized interaction between GW and SW \cite{Winter1998}, infiltration and exfiltration of GW from a stream, for example.
+\\ \\
+Distributed GW and SW exchange integration in numerical modelling schemes are not as extensively explored as localized GW and SW exchange schemes are \cite{Shen2010}. Increasing interest in intensively studying hydrological fluxes at a regional scale, various interests (including legal, such as the EU Water Framework Directive, 2000) advocating the consideration of GW and SW as a single resource, intensive studies in modelling the fate and transport of pollutants in either GW or SW systems, and special applications are increasing the interest \cite{Fleckenstein2010} in numerical schemes that aim to describe GW and SW in a distributed manner.
+
+
+\section{Motivation for the Study}  \label{motiv}
+In theory, a computationally cheap numerical scheme that could couple existing GW and SW models, while reasonably simulating the water fluxes in the unsaturated zone would carry with it very few arguments against its usage even in scenarios where the GW-SW exchange fluxes might not be dominant. This could enhance our understanding of either of the systems we set out to model primarily while offering a richer description of reality.
+\\ \\
+Consider a scenario where a modeller sets out to model a groundwater aquifer in a semi-arid region in the interest of studying whether it is being exploited sustainably; a region whose primary influx of water into its hydrological cycle is torrential, short-lived seasonal rainfall. The dominant influx into the groundwater system is precipitation, while its dominant outflux is evapotranspiration.
+Let us say that region would typically be defined, hydro(geo)logically, by large  GW fluxes and a network of possibly intermittent streams.
+\\ \\
+Conventionally, the modeller would choose to utilize existing established GW models. Apart from studying and translating the geological, hydrogeological, and boundary conditions data from reality into modelling-terms, s/he would set out to calculate the recharge into the GW system based on a system of educated guesses, and documented or undocumented, personal or interpersonal experiences. The challenges as discussed in Section \ref{intro}. \nameref{intro}, keep the modeller from venturing towards translating the given reality into a richer numerical description - one involving a coupled system of GW and SW models, where the recharge into the GW systems would be calculated automatically by the model.
+\\
+However, given that a model existed as described above, although the GW-SW exchange fluxes are not nearly the most dominant fluxes of the system, a coupled model would dynamically calculate the recharge into the GW system based on inputs from the SW model and water-flux estimates from the unsaturated zone. The modeller would obtain a richer hydro(geo)logical description of the system.
+\\ \\
+In the parent study, however, the coupling of GW and SW models might be rather more crucial. The parent study aims to estimate the soil-moisture content for a bog-wetland in order to assess the propagation of the vegetation it hosts, in time. The study aims to assess weather the drainage systems used to drain out the neighboring lands for the practice of agriculture hinders the growth of the native vegetation in the bog-wetland study area that is a designated nature protected reserve. Further details of the study area are discussed in Chapter \ref{wasenmoos}. \nameref{wasenmoos}.
+
+\section{Aim of the Study}  \label{aim}
+The primary aim of this study is to develop and implement a computationally cheap and pragmatic conceptual model and a coupling scheme to:
+\begin{itemize}
+    \item facilitate the coupling of existing GW and SW models to describe distributed GW-SW exchange, and
+    \item reasonably describe the water fluxes in the unsaturated zone.
+\end{itemize}
+Additionally, it is also in the interest of this study and the model conceptualized that the model is applied to the study-area and its performance is noted. Ideally, the model is expected to:
+\begin{itemize}
+    \item demonstrate a good mass balance,
+    \item agreeably demonstrate the expected changes in storage terms corresponding to the precipitation influx and the evapotranspiration outflux, and
+    \item produce simulated observations that are in agreement with the measured observations.
+\end{itemize}
+
+
+\section{Overview of the Document}
+The following Chapter, \ref{theory}. \nameref{theory}, outlines the theoretical concepts and formulations relevant to this study.
+\\ \\
+The Chapter following that, \ref{models}. \nameref{models}, briefly elucidates the construction of the conceptual model and introduces the GW and SW models used in this study.
+\\ \\
+Chapter \ref{wasenmoos}. \nameref{wasenmoos}, describes the study area in light of of this study.
+\\ \\
+Chapter \ref{wasenmoos_model}. \nameref{wasenmoos_model}, discusses the application of the conceptual model and the coupling scheme to the study area.
+\\ \\
+Chapter, \ref{results}. \nameref{results}, examines, analyzes, and draws conclusions from the obtained results; while the final Chapter \ref{summary}. \nameref{results} summarizes the conclusions drawn and breifly discusses shortcomings and potential enhancements.
+
+
+\endinput

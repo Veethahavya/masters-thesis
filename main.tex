@@ -1,0 +1,147 @@
+\documentclass[a4paper,12pt,twoside]{scrreprt}
+
+% Für deutsche Überschriften, usw. dieses Paket aktivieren
+%\usepackage[ngerman]{babel}
+
+%% REQUIRED PACKAGES
+\usepackage{amsfonts,amsmath,amssymb} % math stuff
+\usepackage{booktabs} % better layout for tables
+\usepackage{color} % enable use of colors
+\usepackage{fancyhdr} % definition of own headers/footers
+\usepackage{graphicx} % for including pictures
+\usepackage{float}
+%\usepackage{svg}
+\usepackage{amsfonts}
+\usepackage[super]{nth}
+\usepackage{listings}
+\usepackage[toc,page]{appendix}
+\usepackage{siunitx}
+%\usepackage{tikz}
+%\usetikzlibrary{spy,backgrounds}
+\usepackage{xurl} %linebreak for long urls
+\usepackage{units} % for giving quantities the right surrounding
+\usepackage{xspace} % correct spacing behind DuMuX command
+
+%% OPTIONAL PACKAGES
+\usepackage{array} % needed for the new column type
+\usepackage{lipsum} % dummy text with \lipsum[1]
+\usepackage{subcaption} % multiple figures in one row
+\usepackage{rotating} % rotating of figures
+\usepackage{todonotes} % for colorful todo notes
+
+\usepackage[bookmarks=true,bookmarksopen=true,bookmarksopenlevel=2]{hyperref} % enable links
+\hypersetup{
+%  pdfpagemode=None,
+  pdfpagemode=UseOutlines,
+  pdfstartview=Fit,
+  pdftitle={},
+  pdfsubject={},
+  pdfauthor={},
+  pdfkeywords={},
+  pdfcreator={pdflatex}
+}
+
+%% PAGE SETUP
+\textheight 22.5cm
+\textwidth 15.5cm
+\oddsidemargin 0.5cm
+\evensidemargin 0.5cm
+\parindent 0cm
+\topmargin 0cm
+
+
+%% NUMERATION OF ELEMENTS
+\setcounter{secnumdepth}{5} % depth of numeration, including \subparagraph
+\renewcommand{\theequation}{\thechapter.\arabic{equation}} % numeration for equations
+\numberwithin{equation}{chapter}
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}} % numeration for figures
+\numberwithin{figure}{chapter}
+\renewcommand{\thetable}{\thechapter.\arabic{table}} % numeration for tables
+\numberwithin{table}{chapter}
+
+%% TEXT APPEARANCE
+\renewcommand{\labelitemi}{$-$} % char for itemize environments
+\renewcommand{\baselinestretch}{1.05} % line spacing
+\definecolor{Gray}{gray}{0.42}
+\newcommand*\tick{\item[\checkmark]}
+\newcommand*\cross{\item[$\times$]}
+
+%% USER DEFINED SETUP
+\newcolumntype{V}[1]{>{\raggedright\hspace{0pt}}p{#1}} % columntype with word wrap
+\newcommand{\Pics}{./PICTURES} % path to figures
+\newcommand{\DuMuX}{DuMu$^\textrm{x}$\xspace}
+
+
+\begin{document}
+
+\setcounter{page}{-1}  % exclude title page from numbering
+% \pdfbookmark[0]{Title Page}{Title Page}
+\include{TEXs/titlepage}
+\cleardoublepage % blank page for twoside print
+
+\pagenumbering{Roman} % first pages have Roman numbering
+\setcounter{page}{1}  % exclude title page from numbering
+
+
+%% SETUP OF HEADER AND FOOTER
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyfoot{}
+\fancyhead{}
+\fancyhead[LE,RO]{\small\bfseries \thepage}
+\fancyhead[LO]{\small\bfseries \rightmark}
+%\fancyhead[RE]{\small\bfseries \leftmark}
+\renewcommand{\headrulewidth}{0.5pt} % thin line in headers
+
+
+%% REQUIRED PAGES
+\include{TEXs/statement}
+\cleardoublepage % blank page for twoside print
+\cleardoublepage % blank page for twoside print
+\include{TEXs/acknowledgements}
+\cleardoublepage % blank page for twoside print
+\include{TEXs/abstract}
+\cleardoublepage % blank page for twoside print
+
+
+%% TABLE OF CONTENTS AND LISTS
+\setcounter{tocdepth}{2} % only chapters and subsections
+\tableofcontents
+\pdfbookmark[0]{Table of Contents}{Table of Contents}
+\listoffigures
+\pdfbookmark[0]{List of Figures}{List of Figures}
+%\listoftables
+% \pdfbookmark[0]{List of Tables}{List of Tables}
+% \listoftodos
+% \pdfbookmark[0]{List of Todos}{List of Todos}
+%\include{TEXs/nomenclature}
+% \pdfbookmark[0]{Nomenclature}{Nomenclature}
+
+\newpage
+\pagenumbering{arabic} % use arabic numbers from here
+
+
+%% MAIN PART
+\include{TEXs/chapters/1_introduction}
+\include{TEXs/chapters/2_theory}
+\include{TEXs/chapters/3_models}
+\include{TEXs/chapters/4_wasenmoos}
+\include{TEXs/chapters/5_wasenmoos_model}
+\include{TEXs/chapters/6_results}
+\include{TEXs/chapters/7_summary}
+%\include{TEXs/tipsandtricks}
+
+
+
+%% BIBLIOGRAPHY
+\pdfbookmark[0]{Bibliography}{Bibliography}
+\bibliographystyle{LITERATURE/lf_gb_ila_vt}
+% \bibliographystyle{plain}
+\bibliography{LITERATURE/thesis_references}
+
+\begin{appendix}
+\include{TEXs/appendix}
+\end{appendix}
+
+\end{document}

@@ -1,0 +1,386 @@
+\chapter{Overview of the Modelling Tools}
+\label{models}
+
+\section{Modflow 6: The Groundwater Model}
+\label{mf6}
+Modflow 6 is the \nth{6} core release of the MODFLOW modular groundwater models released by USGS that offers a new array of significant upgrades. It now features an object-oriented programming framework \cite{Hughes2017} that supports construction of multiple model in a single simulation, supports unstructured grids, offers tools for object-based exchange between models that facilitates its coupling with other internal or external models with ease.
+\\
+Modflow 6 uses a finite-difference formulation of the groundwater flow equation (Equation \ref{eq:gwf}) \cite{Langevin2017}. The current version also offers a new iterative model solution (IMS) package that provides extensive control over various solver options such as using the Newton-Raphson formulation and backtracking for highly non-linear cases, among others.
+\\ \\
+The following sections provide a brief overview of the modular packages of Modflow-6 utilized in this study.
+
+\subsection{Model Inputs}
+\subsubsection*{Simulation Name File (SIM) Package}
+This package must contain the information of the simulation options, simulation timing, and the models used in the simulation.
+\\
+Further information can be found here - \cite[p.~6]{USGS2018}.
+
+\subsubsection*{Temporal Discretization (TDIS) Package}
+This package must contain the temporal discretization data for the whole simulation. The simulation period in Modflow is divided into individual stress periods defined by the user.
+Further information can be found here - \cite[p.~9]{USGS2018}.
+
+\subsubsection*{Iterative Model Solution (IMS) Package}
+This package must contain the solver options to be used to solve the models defined in the SIM package. The package offers access to control linear and non-linear solver options extensively.
+\\
+The solver solves the time-difference formulation of the groundwater flow equation (Equation \ref{eq:gwf}) over two loops - the inner linear-loop and the outer non-linear-loop until the specified convergence criteria are achieved.
+Further information can be found here - \cite[p.~210]{USGS2018}.
+
+\subsubsection*{GWF Model Name File (NAM) Package}
+This package must contain the options for the groundwater flow (GWF) model along with the declaration of the packages it uses.
+Further information can be found here - \cite[p.~24]{USGS2018}.
+
+\subsubsection*{Discretization by Vertices (DISV) Package}
+Modflow 6 offers packages for three types of spatial discretization definitions:
+\begin{itemize}
+    \item structured (DIS),
+    \item partially unstructured i.e. unstructured along the horizontal dimensions and structured along the vertical dimension (DISV), and
+    \item fully unstructured (DISU).
+\end{itemize}
+In this application, the DISV package is used.
+\\
+This package must contain the spatial discretization data. In this case, that includes, at the very least, the following data:
+\begin{itemize}
+    \item number of layers,
+    \item number of cells/elements,
+    \item number of vertices,
+    \item description of the vertices
+    \begin{itemize}
+        \item vertex number,
+        \item the x-coordinate, and
+        \item the y-coordinate.,
+    \end{itemize}
+    \item description of each cell providing its:
+    \begin{itemize}
+        \item cell number,
+        \item the characteristic x-coordinate,
+        \item the characteristic y-coordinate,
+        \item number of vertices defining the cell, and
+        \item the vertices numbers defining the cell in the clockwise order.,
+    \end{itemize}
+    \item the model top elevation per cell for the first layer, and
+    \item the model top bottom per each cell, and
+\end{itemize}
+The individual cells are then indexed in various other packages by specifying the layer number and the cell number.
+Further information can be found here - \cite[p.~29]{USGS2018}.
+
+\subsubsection*{Node Property Flow (NPF) Package}
+This package must contain the hydraulic conductivities and cell type (confined, unconfined, or convertible) definition per every cell of the model along with other peripheral definitions.
+Further information can be found here - \cite[p.~44]{USGS2018}.
+
+\subsubsection*{Storage (STO) Package}
+This package must contain the cell-wise data on the specific yields and either the specific storage or the storativity.
+Further information can be found here - \cite[p.~50]{USGS2018}.
+
+\subsubsection*{Initial Conditions (IC) Package}
+This package must contain the cell-wise initial starting heads.
+Further information can be found here - \cite[p.~161]{USGS2018}.
+
+\subsubsection*{Constant-Head (CHD) Package}
+This package must contain the data on all constant-head boundaries to be prescribed throughout the simulation.
+Further information can be found here - \cite[p.~66]{USGS2018}.
+
+\subsubsection*{Recharge (RCH) Package}
+This package must contain the cell-wise time-series data recharges to be prescribed over the simulation.
+\\ \\
+This package is pivotal in establishing a robust coupling between models, albeit explicitly, by offering the ability for the user to provide distributed discharges (positive or negative) that can be attributed to each cell of the model individually.
+Further information can be found here - \cite[p.~90]{USGS2018}.
+
+\subsubsection*{Output Control (OC) Package}
+This package is used to specify the level of verbosity for the outputs written.
+Further information can be found here - \cite[p.~162]{USGS2018}.
+
+\subsubsection*{Observation (OBS) Utility}
+This package is used to record observations from the model.
+Further information can be found here - \cite[p.~164]{USGS2018}.
+
+
+\subsection{Model Outputs}
+\subsubsection*{The LST File}
+A successful model run produces two LST files. \textless model \textunderscore name\textgreater .lst is an ASCII file that reports exhaustive information on the model run, the heads and the budgets for time-steps and stress periods as requested in the OC file. Whereas the ASCII file mfsim.lst acts more of a log-file reporting the status of the simulation.
+
+\subsubsection*{The HDS File}
+This is a binary file containing the hydraulic heads for the model grid and the simulation period as requested in the OC file. More information on this file can be found here \cite[p.~239]{USGS2018}.
+
+\subsubsection*{The CBB File}
+This is a binary file containing the budgets for the model grid and the simulation period as requested in the OC file or by setting the "save flows" flag to true in supported packages such as the RCH packages. More information on this file can be found here \cite[p.~249]{USGS2018}.
+
+
+\section*{FloPy}
+The \href{https://github.com/modflowpy/flopy}{FloPy python package} can be used to create, run, and post-process Modflow-based models \cite{Bakker2016}. This study has extensively made use of this package to handle Modflow 6 and couple it with the other two models with utmost ease.
+\\
+The package may be found at \url{https://github.com/modflowpy/flopy}.
+
+
+\section{Delft3D Flexible Mesh: The Surface-water Model}
+\label{delft}
+The Delft3D Flexible Mesh also known as D-Flow FM is a major update to the Delft3D surface-water modelling suite produced by Deltares that is still in development. Version 1.2.105.67514M, a developer build obtained from the Delft3D FM Beta testing programme has been used in this study.
+The model is relatively simple to set-up with a powerful command-line interface that also has room for parallelization for larger models.
+\\ \\
+The model solves shallow water equations in 2D as described by Equations \ref{eq:shallow_water_mass} and \ref{eq:shallow_water_momentum} using the finite volume method \cite{Deltares}. The model also offers vertical democratisation, thus adding 3D capabilities. The model offers seven different solvers \cite[p.~109]{Deltares2016}. The setting up of the model is briefly discussed in the upcoming subsections to offer some context to upcoming references in the study.
+
+\subsection{Model Inputs}
+\subsubsection*{Model Definition: The MDU File}
+The model is set up using an ASCII Master Definition File (\textless model\textunderscore name\textgreater .mdu) specifying the options and inputs (either in external files or internally as values). Descriptive information on possible arguments that can be provided are found here \cite[p.~373]{Deltares2016}.
+
+\subsubsection*{Model Grid: NetCDF Ugrid File}
+The description of the model grid is to be held in a NetCDF file in the Ugrid CF 1.8 format (\textless model\textunderscore name\textgreater \textunderscore net.nc). Information of how this file must be structured for it to be successfully read by the model can be found here \cite[p.~383]{Deltares2016}.
+\\
+The model grid can also be generated using the GUI RGFGRID utility provided in the Delft3D modelling suite. More information on this can be found here \cite{Deltares2014}.
+
+\subsubsection*{Initial Conditions File}
+The initial conditions are specified as key-word arguments in an ASCII file that is then to be referenced in the MDU file. Further information can be found here \cite[p.~414]{Deltares2016}.
+
+\subsubsection*{Boundary Conditions: The external forcing file}
+The definition of the model boundaries, meteorological enforcements, and lateral discharges can be made in this key-word argument based ASCII file. This is a pivotal file for this study as the lateral discharge capability that purely adds or subtracts volumes from the storages of each cell, without any physics enacted upon the exchange, is used to specify the change in volume fluxes to be enforced on the surface-water model for the sake of coupling it with the groundwater model. More information on this file and lateral discharges can be found here \cite[p.~407]{Deltares2016}.
+
+
+\subsection{Model Outputs}
+The a successful model run generates three primary outputs and a log-file.
+
+\subsubsection*{The MAP File}
+The (\textless model\textunderscore name\textgreater \textunderscore map.nc) file is a NetCDF file of the format as requested in the MDU file. This file contains primarily the water levels and velocities for the model grid over the simulation period along with other parameters depending on the inputs and the requested outputs in the MDU file. Further information can be found here \cite[p.~472]{Deltares2016}
+
+\subsubsection*{The HIS File}
+The (\textless model\textunderscore name\textgreater \textunderscore his.nc) file is a simple NetCDF file. This file contains water balance data over the simulation period for various parameters depending on the inputs and the requested outputs in the MDU file. Further information can be found here \cite[p.~472]{Deltares2016}
+
+\subsubsection*{The RST File}
+The (\textless model\textunderscore name\textgreater \textunderscore \textless time\textgreater \textunderscore rst.nc) file is a NetCDF file of the format as requested in the MDU file. This file contains minimal data on the grid geometry and the initial and final water levels and is to be used as the primary input file to restart a model from a time that corresponds the time on the generated restart file. The frequency of generation of a restart file may be controlled in the MDU file. Further information can be found here \cite[p.~472]{Deltares2016}
+
+
+\section{GWSWEX: The Interface Model}
+\label{GWSWEX}
+The GWSWEX (\textit{GroundWater Surface-Water EXchange}) model is the primary output of this study. It is a 0-dimensional conceptual model that aims to reasonably simulate the unsaturated flow processes by re-imagining the head-based formulation of the Richards equation (\ref{eq:richards_head_based}) with the overarching goal of coupling existing GW and SW models. The ideal aim of the model is to work on building a model as described in sections \ref{motiv} and \ref{aim}. 
+\\ \\
+To summarize and re-iterate, the aim of this model is to:
+\begin{itemize}
+    \item be computationally cheap,
+    \item provide an adequate description of the unsaturated flows for large-scale applications, and
+    \item facilitate the coupling of existing GW and SW models by serving as an interface between these two models.
+\end{itemize}
+
+\subsection{The Coupling Scheme}
+\label{couping_scheme}
+The choice of the coupling scheme has direct implications to the numerical scheme of the Interface Model. Thus, the coupling scheme has to be briefly discussed before any further discussions on the model can take place. The nature of the coupling scheme chosen for the application of the GWSWEX model is explicit and offline.
+\\ \\
+\textbf{Explicit}, as discussed in \ref{coupling_schemes}, implies that the numerical scheme devised does not directly act on the storage terms of the models to be coupled. By extension, this also implies that the numerical schemes of the existing model and the devised model act independently of each other. Thus, to enable the coupling of models using this technique, the prescribed global simulation period needs to be split into multiple local simulation periods between which the coupling scheme may be applied. A schematic representation of this process is illustrated in Figure \ref{fig:coupling_scheme}.
+\\ \\
+\textbf{Offline} implies that the model devised does not directly communicate with the other models directly but rather uses existing infrastructure in the existing models to impose changes in the storage, often as discharges of the said storage.
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{\Pics/illustrations/coupling_scheme}
+    \caption{An illustration of the coupling scheme.}
+    \label{fig:coupling_scheme}
+\end{figure}
+
+\subsection{Storage Terms}
+The model enforces its numerical scheme on the 0-dimensional storage terms and has been conceptualized very visually. Thus, to fully understand the conceptual numerical scheme the model uses, it is crucial to visualize and internalize the storage terms that the model acts upon. The following illustration may help that cause:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.309]{\Pics/illustrations/0D Cell}
+    \caption{An illustration of the storage terms of the model and Exchanges between them in a sample 0D Cell.}
+    \label{fig:0DCell}
+\end{figure}
+
+\subsubsection*{Groundwater Storage: GWS}
+The Groundwater Storage term conceptually represents the water table in the discrete model cell. This storage term is directly read from the GW model at the start of the local simulation. The numerical scheme of the GWSWEX model is then enforced upon the storage for each internal time step. The changes in the storage in each internal time step is then translated as discharge that are then enforced upon the GW model as illustrated in Figure \ref{fig:coupling_scheme}. The storage is described as height from the reference level and thus has the unit [L].
+
+\subsubsection*{Surface-water Storage: SWS}
+The Surface-water Storage term conceptually represents the height of water of the surface-water in the discrete model cell. This storage term is directly read from the SW model at the start of the local simulation. The numerical scheme of the GWSWEX model is then enforced upon the storage for each internal time step. The changes in the storage in each internal time step is then translated as discharge that are then enforced upon the SW model as illustrated in Figure \ref{fig:coupling_scheme}. The storage is described as height from the ground surface elevation and thus has the unit [L].
+
+\subsubsection*{Soil Moisture: SM}
+The Soil Moisture storage term conceptually represents the degree of saturation of the effective pore volume (discussed in the next subsection) available in the unsaturated zone. One must note that although physically variable in the vertical direction, its conceptual representation in the GWSWEX model is depth-averaged and thus offers no description of its vertical distribution in the unsaturated zone. This is deliberately designed as such in alignment with the 0-dimensional nature of the model and in the interest of keeping the model computationally cheap.
+\\
+This storage term is internal to the GWSWEX model, i.e. its values are passed from one local simulation period to another and the numerical scheme acts on the storage for each internal time step. However, discharges in this storage are calculated by translating the consecutive changes in storage per each internal time step in the interest of understanding the enactment of the numerical scheme on this storage better. The storage is described as height from the groundwater storage elevation and thus has the unit [L].
+\paragraph*{$SM_\textrm{min}$}
+is indicative of a portion of this storage beyond which the storage is not reducible. The implication of this virtual storage term is discussed in \ref{GWSWEX_vs_Richards}.
+
+\subsubsection*{Effective Pore Volume: ePV}
+The effective Pore Volume is a virtual storage term that conceptually represents is the available pore volume in the unsaturated zone. This virtual storage term is dynamically calculated by the numerical scheme for every time step and is directly dependant on the GWS level. ePV is thus representative of the maximum allowable SM that corresponds to fully saturated soil, whereupon it is transformed into the GWS term.
+\\
+Discharges in this storage are not calculated as it is not deemed to be of much significance owing to the fact that the storage is virtual. However, the absolute values of this storages are reported for each internal time step.
+As discussed in the coming subsections, this virtual storage term is a key term in the numerical scheme. 
+
+
+\subsection{Numerica l Scheme}
+The GWSWEX model is a set of conditional algebraic equations that are looped over the internal time steps and then over all discrete elements in the model domain.
+A simplified illustrative flow of the core numerical scheme can be seen in Figure \ref{fig:GWSWEX_flow}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{\Pics/illustrations/GWSWEX_flow}
+    \caption{A simplified illustrative flow of the core numerical scheme.}
+    \label{fig:GWSWEX_flow}
+\end{figure}
+
+\begin{equation} \label{eq:pSM}
+    pSM_t = P_t \left[1- \left( \frac{SM_{t-1}}{ePV_t}\right)^\beta\right]
+\end{equation}
+\\
+\begin{equation} \label{eq:pGW}
+    pGW_t = min\left(\left[min(P_t, \, K) \left(\frac{SM_{t-1}}{ePV_t}\right)^\alpha\right], \; P_t-pSM, \; K\right)
+\end{equation}
+\\
+\begin{equation} \label{eq:pSW}
+    pSW_t = P_t - pSM_t - pGW_t
+\end{equation}
+\\
+where
+\begin{tabbing}
+    $t$ \hspace{1.6in}\= = current time step,\\
+    $P$ \>= precipitation influx,\\
+    $pSM,\,pGW,\,and\,pSW$ \>= precipitation influx into Soil Moisture, Groundwater, and\\ \> \hspace{0.12in} Surface-water storage terms respectively, \\
+    $SM$ \>= Soil Moisture storage term,\\
+    $ePV$ \>= effective Pore Volume, \\
+    $K$ \>= hydraulic conductivity of the unconfined aquifer, and\\
+    $\alpha$ and $\beta$ \>= model parameters.\\
+\end{tabbing}
+
+Figure \ref{fig:GWSWEX_flow} along with Equations \ref{eq:pSM}, \ref{eq:pGW}, and \ref{eq:pSW} provide a complete description of the core numerical scheme employed by the GWSWEX model. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1.05]{\Pics/illustrations/prec_plot}
+    \caption{An illustration of the distribution of precipitation influx across the three storage terms - SM, GW, and SW. [$\alpha$=0.1, $\beta$=0.5, $k$=0.85, and $P$=1]}
+    \label{fig:prec_plot}
+\end{figure}
+
+Figure \ref{fig:prec_plot} illustrates the behaviour of Equations \ref{eq:pSM}, \ref{eq:pGW}, and \ref{eq:pSW} along variable degrees of saturation in the unsaturated zone. The x-axis represents the degree of soil moisture saturation represented as percentage of soil moisture over the effective pore volume, while y-axis represents the distribution of the constant precipitation influx (here, an influx of 1) into the three storage terms.
+\\ \\
+For example, with SM storage corresponding to 20\% of the ePV, roughly 62\% (or 0.62 units of the 1 unit influx) is allocated to the SM storage term while the rest is allocated to the GW storage term.
+\\
+Similarly, with an 80\% SM saturation, roughly 16\% of the influx is allocated to the SM storage term, roughly 80\% is allocated to the GW storage term, and roughly 4\% is allocated to the SW storage term.
+
+\subsubsection{Comparison with the Richard's equation} \label{GWSWEX_vs_Richards}
+As observed from the Equations \ref{eq:pSM}, \ref{eq:pGW}, and \ref{eq:pSW} and Figure \ref{fig:prec_plot}, \textit{drier} soils i.e. when the SM storage corresponds to lower percentages of the ePV, imply that most of the influx is allocated to the SM storage term, little to the GW storage term, and very little, if not none, is allocated to the SW storage term. Conversely, \textit{wetter} soils imply that a majority of the influx is allocated to the GW storage term, some to the SW storage term, and little, if not none, to the SM storage term.
+\\ \\
+Physically, this is aimed to correspond to the fact that drier soils have greater resistance to water flows owing to the resistance of air in the porous media being replaced by water. This may be observed in Figures \ref{fig:water_retention_curves} and \ref{fig:vG_BC}.
+\\ \\
+Equations \ref{eq:pSM}, \ref{eq:pGW}, and \ref{eq:pSW} when integrated with the numerical scheme as illustrated in Figure \ref{fig:GWSWEX_flow} aim to estimate the soil moisture by conceptually accounting for unsaturated flows, calculate the infiltration into the groundwater, and estimate the runoff as surface-water all while promising to be computationally cheap. The equations have been formulated by re-imagining the Richards equation in a depth-averaged manner and have been inspired by the HBV \cite{hbv} and HBV-96 models \cite{LINDSTROM1997}.
+\\ \\
+An illustration of combining the concept of $SM_\textrm{min}$ to the formulated equations produces Figure \ref{fig:richards_vs_GWSWEX}. Here, {$SM_\textrm{min}$} is conceptually analogous to the residual water content from Equation \ref{eq:vanGenuchten}. One may now observe how this illustration of the numerical scheme compares quantitatively agreeably to the water retention curves from Figure \ref{fig:water_retention_curves} that the Richards equation (Equation \ref{eq:richards_head_based}) relies on.
+\\ \\
+The variability of the matric head as a function of the volumetric water content is conceptually analogous to the variability of the fraction of the influx being allocated to the SM storage term as a function of the degree of saturation of the SM storage term.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[scale=1]{\Pics/illustrations/richards_vs_GWSWEX}
+    \caption{Comparing the numerical scheme to the Richards equation \\ $\alpha$=0.1, $\beta$=0.5, $k$=0.85, $P$=1, and $m$=0.175 $\implies$ {$SM_\textrm{min}$=17.5}}
+    \label{fig:richards_vs_GWSWEX}
+\end{figure}
+
+\subsubsection{Significance of the Model Parameters}
+Being a conceptual model that represents highly complex process in a very simplified manner, the model offers parameters to control the conceptual behaviour of the representative physics of the model. This section briefly discusses the implication of all the model parameters and the effects of their variation.
+\paragraph*{$\alpha$} [0-1]
+offers control over the non-linearity of the allocation of influx to the GW storage term. Lower values result in a larger portion of the influx to be allocated to GW storage term and thus result in a delayed runoff generation and vice versa. This is observed in Figures \ref{fig:GWSWEX_params_1}, \ref{fig:GWSWEX_params_2}, and \ref{fig:prec_plot}.
+\paragraph*{$\beta$} [0-1]
+controls the non-linearity and degree of allocation of the influx to the SM storage term. A larger value corresponds a larger portion of the influx to be allocated to the SM storage term and vice versa. This is observed in Figures \ref{fig:GWSWEX_params_1}, \ref{fig:GWSWEX_params_2}, and \ref{fig:prec_plot}.
+\paragraph*{$n$} [0-1]
+conceptually and physically very closely represents the specific yield of the unconfined aquifer and has direct implications on the quantification of the SM and GW storage terms and also the ePV virtual storage term. Thus, it acts as an overarching calibration factor that signifies the degree of water retention in these porous-media storage terms.
+\paragraph*{$m$} [0-1]
+defines the fraction of the ePV that is considered to be non-removable and indirectly dictates the nature of the distribution of the influx among the three storage terms. It conceptually represents the residual saturation of the soil.
+\paragraph*{$k$}
+conceptually represents the infiltration capacity of the unconfined aquifer. It defines the degree of allocation of the influx into the GW storage term. Lower values imply lesser influx to the GW storage term and thus quicker runoff generation and vice versa. Its effects may be observed in Figures \ref{fig:GWSWEX_params_1}, \ref{fig:GWSWEX_params_2}, and \ref{fig:prec_plot}. In this study, it is linked to the hydraulic conductivity of the unconfined aquifer as defined in the GW model. However, it may be independently defined, thus offering finer control over the model results.
+\paragraph*{$SW_{th}$}
+is the threshold of SW storage term beyond which it is considered to be active and thus utilized by the numeric scheme to supplement the influx into the GW storage term. This parameter loosely defines the degree of separation between the SW and GW storage terms.
+\\ \\
+The above perimeters may also be varied temporally for each local simulation period thus allowing finer control.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[scale=0.75]{\Pics/illustrations/GWSWEX_params_1}
+    \caption{Visualizing the effects of varying model parameters: Case 1 [$\alpha$=0.6, $\beta$=0.4, and $k$=0.85]}
+    \label{fig:GWSWEX_params_1}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.75]{\Pics/illustrations/GWSWEX_params_2}
+    \caption{Visualizing the effects of varying model parameters: Case 2 [$\alpha$=0.2, $\beta$=0.8, and $k$=0.5]}
+    \label{fig:GWSWEX_params_2}
+\end{figure}
+\pagebreak
+
+\subsection{The GWSWEX Program}
+As the numerical scheme is a set of simple conditional algebraic calculations that are nested inside two consecutive loops, each looping over the cells in the model and the internal time steps in the local simulation period, the program is written in Fortran 90 instead of a modern high-level language in the interest of ensuring shorted runtimes. The source code may be found in Appendix \ref{GWSWEX_program}. A compiled windows executable program may be found at \url{https://github.com/Veethahavya/GWSWEX}.
+\\ \\
+Setting up and running the model is rather simple and straightforward.
+
+\subsubsection{Input Files}
+\label{GWSWEX_input}
+The input files must be of the Fortran unformatted binary file format. Note that the units of the arguments (when applicable) must be of the same dimensions. The following files are necessary for a successful model run:
+\paragraph*{args.ip} must contain the model parameters in the following order:
+\begin{enumerate}
+    \item \textit{elems [int]}: number of discrete cells/elements in the model,
+    \item \textit{ts [int]}: number of internal time-steps for the local simulation period,
+    \item \textit{ts\textunderscore size [int]}: size of each internal time-step for the local simulation period [T],
+    \item \textit{n [real: 0-1]}: specific yield of the unconfined aquifer,
+    \item \textit{n\textunderscore gw [real: 0-1]}: specific storage of the unconfined aquifer,
+    \item \textit{m [real: 0-1]}: model parameter to determine $SM_{min}$,
+    \item \textit{$\alpha$ [real: 0-1]}: GW influx non-linearity model parameter,
+    \item \textit{$\beta$ [real: 0-1]}: SM influx non-linearity model parameter, and
+    \item \textit{$SW_{th}$ [real]}: SW drying threshold.
+\end{enumerate}
+
+\paragraph*{gok.ip [real]} must contain the ground surface elevation for each cell [L].
+
+\paragraph*{k.ip [real]} must contain the hydraulic conductivity of the unconfined aquifer for each cell [LT$^{-1}$].
+
+\paragraph*{p.ip [real]} must contain the precipitation influx for each internal time-step [LT$^{-1}$].
+
+\paragraph*{et.ip [real]} must contain the evapotranspiration outflux for each internal time-step [LT$^{-1}$].
+
+\paragraph*{gws\textunderscore ini.ip [real]} must contain the initial groundwater heads for each cell [L].
+
+\paragraph*{sws\textunderscore ini.ip [real]} must contain the initial surface-water levels (above the ground surface elevation) for each cell [L].
+
+\paragraph*{epv\textunderscore ini.ip [real]} must contain the initial unit effective Pore Volume for each cell [L].
+
+\paragraph*{sm\textunderscore ini.ip [real]} must contain the initial unit soil moisture for each cell [L].
+
+\paragraph*{chd.ip [int4]} must contain a  flag to specify if the cell is bound by CHD boundary in the GW model (0:false/1:true).
+
+
+\subsubsection{Output Files}
+A successful model run results in the following outputs written as Fortran unformatted binary files:
+
+\paragraph*{gws.op [real]} contains the GW heads for each cell and each time-step of the model run [L].
+
+\paragraph*{sws.op [real]} contains the SW levels for each cell and each time-step of the model run [L].
+
+\paragraph*{sm.op [real]} contains the SM levels for each cell and each time-step of the model run [L].
+
+\paragraph*{epv.op [real]} contains the ePV levels for each cell and each time-step of the model run [L].
+
+\paragraph*{gw\textunderscore dis.op [real]} contains the discharge in GW storage for each cell and each time-step of the model run [LT$^{-1}$].
+
+\paragraph*{sw\textunderscore dis.op [real]} contains the discharge in SW storage for each cell and each time-step of the model run [LT$^{-1}$].
+
+\paragraph*{sm\textunderscore dis.op [real]} contains the discharge in SM storage for each cell and each time-step of the model run [LT$^{-1}$].
+
+\paragraph*{Qin.op [real]} contains the total influx for each cell and each time-step of the model run [LT$^{-1}$].
+
+\paragraph*{Qout.op [real]} contains the sum of changes in storage for each cell and each time-step of the model run [LT$^{-1}$].
+
+\paragraph*{Qdiff.op [real]} contains the differences between influxes and outfluxes for each cell and each time-step of the model run [LT$^{-1}$].
+\\ \\
+
+\subsection{The GWSWEX Python Module}
+\label{GWSWEXpy}
+To enforce the coupling scheme and to offer extensive control over the handling of the three models, an object-oriented Python module is written as a part of this study. The coupled models can then either be run using a command line or with a small python program. The module may be found at \url{https://github.com/Veethahavya/GWSWEX}. Appendix \ref{GWSWEX_module} breifly introduces the module with an example.
+\\ \\
+The highlights of the module features are:
+\begin{itemize}
+    \item robust timing control,
+    \item reading and preparing the precipitation and evapotranspiration data,
+    \item automatic internal time-step control based on precipitation intensity,
+    \item automatic updating of the stream boundary conditions,
+    \item threadding for parallel run of GW and SW model simulations
+    \item initialization, running, and loading the results of the three models (GWSWEX, Modflow 6, and Delft-FM),
+    \item capability to restart a simulation,
+    \item visualisation of the model results,
+    \item accumulation of the model results into a single output file (netCDF),
+    \item report generation, and
+    \item extensive visualization options, post simulation, among others
+\end{itemize}
+
+
+
+\endinput

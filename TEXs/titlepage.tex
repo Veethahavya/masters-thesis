@@ -1,0 +1,91 @@
+%% PAGE SETUP
+\thispagestyle{empty} % no page number, header or footer
+
+\vspace*{-2truecm}
+
+\newlength{\HeadWidth}
+\setlength{\HeadWidth}{\textwidth}
+
+\newlength{\LogoWidthL}
+\settowidth{\LogoWidthL}{\includegraphics[height=20mm]{\Pics/logos/Logo_UniS-zentriert}}
+\addtolength{\HeadWidth}{-\LogoWidthL}
+\addtolength{\HeadWidth}{-3mm} % for correction
+
+\newlength{\LogoWidthR}
+\settowidth{\LogoWidthR}{\includegraphics[height=23mm]{\Pics/logos/Logo_LH2_sw}}
+\addtolength{\HeadWidth}{-\LogoWidthR}
+\addtolength{\HeadWidth}{-3mm} % for correction
+
+\newlength{\BoxBreite}
+\setlength{\BoxBreite}{\textwidth}
+
+\vspace*{-1.5cm} 
+{
+  \parbox[b]{\BoxBreite}
+  {                               
+    \includegraphics[height=20mm]{\Pics/logos/Logo_UniS-zentriert}
+    \parbox[b][22mm][c]{\HeadWidth}
+    {                                       
+      \fontsize{10}{11pt}\selectfont \sffamily        
+      \begin{center}          
+        Universit\"at Stuttgart  -  Institut f\"ur Wasser- und Umweltsystemmodellierung\\    
+        {\bfseries 
+          Lehrstuhl f\"ur Hydromechanik und Hydrosystemmodellierung}\\
+        Prof.~Dr.-Ing.~Rainer Helmig    
+      \end{center} 
+      }
+    \includegraphics[height=23mm]{\Pics/logos/Logo_LH2_sw} \\ [-3mm] 
+    }
+  }       
+\vspace{1.5cm}
+
+\vspace*{-1.5cm} 
+{
+  \parbox[b]{\BoxBreite}
+  {                               
+    \includegraphics[height=20mm]{\Pics/logos/kup_logo}
+    \parbox[b][22mm][c]{\HeadWidth}
+    {                                       
+      \fontsize{10}{11pt}\selectfont \sffamily        
+      \begin{center}          
+        {\bfseries 
+          Ingenieurgesellschaft Prof. Kobus und Partner GmbH}\\
+        Wilhelm-Haas-Straße 6, 70771 Leinfelden-Echterdingen 
+      \end{center} 
+      }
+    }
+  }       
+\vspace{2cm}
+
+%% TEXT PART
+\begin{center}
+   {\large Master's Thesis}\\[0.5cm]
+  {\bfseries {\LARGE A 0-dimensional Conceptual Model to facilitate Coupling of Groundwater and Surface-Water Numerical Models\\[0.3cm]}}
+  {\large And its application to a bog-wetland study area}\\[0.5cm]
+\end{center}
+
+\vspace{4cm}
+
+\begin{center}
+  {\normalsize Submitted by}\\[0.1cm]
+  {\large Veethahavya Kootanoor Sheshardivasan}\\[0.1cm]
+\end{center}
+
+\vspace{1.5cm}
+
+\begin{center}
+  {\large Stuttgart, 04.04.2021}
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+  {\large 
+  %%\begin{tabular}{l}
+  Examiner: apl. Prof. Dr.-Ing. Holger Class\\
+  Supervisor: Dr.-Ing. Ulrich Lang
+  %%\end{tabular}
+  }\\[0.1cm]
+\end{center}
+
+\endinput

@@ -1,0 +1,30 @@
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    numbers=left,
+    breaklines=true,
+    tabsize=2,
+    basicstyle=\ttfamily\footnotesize,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{magenta},
+    literate={\ \ }{{\ }}1
+}
+
+\chapter{The GWSWEX Model}
+\label{GWSWEX_program}
+\lstinputlisting[language=Fortran]{LITERATURE/GWSWEX.f90}
+
+
+\chapter{The GWSWEX Python Module}
+\label{GWSWEX_module}
+The following program demonstrates the use of the GWSWEX module, within which the coupling scheme is implemented. The module itself may be accessed at \url{https://github.com/Veethahavya/GWSWEX}.
+
+\lstinputlisting[language=Python]{LITERATURE/GWSWEX_run.py}
+
+
+\endinput
